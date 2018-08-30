@@ -10,6 +10,8 @@ public class KwartetSpel {
 	private ArrayList <Speler> deSpelers = new ArrayList<Speler>();
 	private ArrayList <Kaart> deck = new ArrayList<Kaart>();
 
+	Input input = new Input ();
+
 	public static void main (String [] args) {
 
 		KwartetSpel kwartet = new KwartetSpel();
@@ -21,7 +23,7 @@ public class KwartetSpel {
 
 	public void setUp () {
 		System.out.println("Met hoeveel spelers speel je?");
-		Input input = new Input ();
+
 		String getypt = input.userInput();
 		System.out.println("dit heb je getypt: "+ getypt);
 		aantalSpelers = Integer.parseInt(getypt); //maakt van de string die je typt een integer
@@ -79,7 +81,7 @@ public class KwartetSpel {
 	private void spelen () {
 
 		for (Speler gekkie : deSpelers) {
-			System.out.println("er is een speler genaamd: " + gekkie);
+			System.out.println("er is een speler genaamd: " + gekkie.getNaamSpeler());
 		}
 
 
@@ -87,7 +89,7 @@ public class KwartetSpel {
 		boolean isAanHetSpelen = true;
 		Speler actieveSpeler = deSpelers.get(0);
 		String gekozenSpeler = "";
-		while (isAanHetSpelen) {
+		ER_IS_EEN_CATCH: while (isAanHetSpelen) {
 
 
 			System.out.println("" + actieveSpeler.getNaamSpeler() + " mag beginnen!");
@@ -100,12 +102,56 @@ public class KwartetSpel {
 				} //if actieve speler is de speler kies
 
 				System.out.println("typ: " + spelerkies.getNaamSpeler().replaceFirst("speler ", "") + " voor " + spelerkies.getNaamSpeler());
-				
+
 				kiesnummerSpeler++;
 				//System.out.println("spelerkies loop wordt gedaan WOW");
 
 			} //end for each speler loop
 			System.out.println("typ Q om af te sluiten");
+
+			boolean validchoice = false;
+			while (!validchoice) {
+			
+			String deInput = input.userInput();
+
+			if (deInput == "q") {
+				isAanHetSpelen = false;
+				validchoice = true;
+				return;
+			} else {
+
+				try {
+				
+				int gekozenspelerint = Integer.parseInt(deInput);
+				
+				for (Speler spelerkies : deSpelers) {
+					if (!actieveSpeler.equals(spelerkies) && deSpelers.get(gekozenspelerint).equals(spelerkies)) {
+
+						System.out.println("gekozen speler is " + spelerkies.getNaamSpeler());
+						validchoice = true;
+						break;
+					} //if actieve speler is de speler kies	
+
+
+				} //end for loop
+
+				} catch (IndexOutOfBoundsException ex) {
+				 System.out.println("zoveel spelers zijn er niet!!");
+				 continue ER_IS_EEN_CATCH;
+				} catch (NumberFormatException ex) {
+					System.out.println("geen mogelijke letter!");
+					continue ER_IS_EEN_CATCH;
+				} catch (Exception ex) { //end try and catch
+					System.out.println("invalid input!");
+					continue ER_IS_EEN_CATCH;
+				}
+					
+			} //end if statement (else)
+
+
+			} //end while valid choice
+
+
 
 			isAanHetSpelen = false;
 
